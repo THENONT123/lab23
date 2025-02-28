@@ -20,20 +20,70 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
-
+void importDataFromFile(string filename, vector<string>& names, vector<int>& scores, vector<char>& grades){
+    ifstream source(filename);
+    string text,strname;
+    char name[100];
+    int score[3] = {};
+    char format[] = "%[^:]: %d %d %d";
+    while(getline(source,text)){
+        sscanf(text.c_str(),format,name,&score[0],&score[1],&score[2]);
+        strname = name;
+        int sumscore = score[0]+score[1]+score[2];
+        names.push_back(strname);
+        scores.push_back(sumscore);
+        grades.push_back(score2grade(sumscore));
+    }
 }
 
-void getCommand(){
+void getCommand(string &command, string &key){
+    cout<<"Please input your command:\n";
+    string input;
+    getline(cin,input);
 
+    int end = input.find(" ");
+    if(end != -1){
+        command = toUpperStr(input.substr(0,end));
+        key = input.substr(end+1);
+    }
+    else{
+        command = toUpperStr(input.substr(0,end));
+    }
 }
 
-void searchName(){
-
+void searchName(vector<string>&names, vector<int>&scores, vector<char>&grades , string key){
+    int count=0;
+    for(size_t i = 0 ;i<names.size();i++){
+        if(toUpperStr(names[i])==toUpperStr(key)){
+            count++;
+            cout<<"---------------------------------\n";
+            cout<<names[i]<<"'s score = "<<scores[i]<<"\n";
+            cout<<names[i]<<"'s grade = "<<grades[i];
+            cout<<"\n---------------------------------\n";
+        }
+    }
+    if(count == 0){
+            cout<<"---------------------------------\n";
+            cout<<"Cannot found.\n";
+            cout<<"---------------------------------\n";
+        }
 }
 
-void searchGrade(){
-
+void searchGrade(vector<string>&names , vector<int>&scores , vector<char>&grades ,string key){
+    string grade;
+    int count = 0;
+    cout<<"---------------------------------\n";
+    for(size_t i = 0;i<names.size();i++){
+        grade = grades[i];
+        if(grade == key){
+            count++;
+            cout<<names[i]<<" ("<<scores[i]<<")\n";
+        }
+    }
+    if(count == 0 ){
+        cout<<"Cannot found.\n";
+    }
+    cout<<"---------------------------------\n";
 }
 
 
